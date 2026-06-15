@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KemasToko Owner — Staf</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Hanken+Grotesk:wght@600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script>tailwind.config={theme:{extend:{colors:{primary:"#00355f","primary-container":"#0f4c81","on-primary":"#ffffff","on-primary-container":"#8ebdf9","primary-fixed":"#d2e4ff","surface":"#f8f9fa","surface-container-lowest":"#ffffff","surface-container-low":"#f3f4f5","surface-container":"#edeeef","surface-container-high":"#e7e8e9","surface-container-highest":"#e1e3e4","on-surface":"#191c1d","on-surface-variant":"#42474f","outline":"#727780","outline-variant":"#c2c7d1","secondary":"#00677d","secondary-container":"#50d9fe","on-secondary-container":"#005c70","tertiary":"#463000","tertiary-fixed":"#ffdea8","on-tertiary-fixed-variant":"#5e4200","on-tertiary-container":"#f1ae00","error":"#ba1a1a","error-container":"#ffdad6","on-error-container":"#93000a"}}}}</script>
+<style>
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+body{background:#f3f4f5;font-family:'Inter',sans-serif;-webkit-tap-highlight-color:transparent}
+.card{background:#fff;border:1px solid #e1e3e4;border-radius:16px;box-shadow:0 2px 12px -4px rgba(0,53,95,.08)}
+.nav-link{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 16px;border-radius:20px;transition:all .2s;color:#727780;font-size:10px;font-family:'JetBrains Mono',monospace;font-weight:500;cursor:pointer;text-decoration:none}
+.nav-link.active{background:#50d9fe;color:#005c70}
+.gradient-hero{background:linear-gradient(135deg,#00355f 0%,#0f4c81 60%,#2d6197 100%)}
+.star-filled{font-variation-settings:'FILL' 1}
+.perf-bar{height:6px;border-radius:6px;background:#e1e3e4;overflow:hidden}
+.perf-fill{height:100%;border-radius:6px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+#detail-sheet{display:none;position:fixed;inset:0;z-index:200}
+#detail-sheet.show{display:flex}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.slide-up{animation:slideUp .3s cubic-bezier(.4,0,.2,1)}
+</style>
+</head>
+<body class="min-h-screen pb-24 text-on-surface">
+
+<header class="fixed top-0 w-full z-50 bg-surface/95 backdrop-blur-md shadow-sm flex justify-between items-center px-4 h-16 border-b border-outline-variant/40">
+  <div class="flex items-center gap-3">
+    <a href="OWNER_HOME.html" class="material-symbols-outlined text-primary p-1 active:scale-90">arrow_back</a>
+    <div>
+      <h1 style="font-family:'Hanken Grotesk';font-size:18px;font-weight:800;color:#00355f">Manajemen Staf</h1>
+      <p style="font-family:'JetBrains Mono';font-size:9px;color:#727780;letter-spacing:.04em">OWNER DASHBOARD · KemasToko</p>
+    </div>
+  </div>
+  <button onclick="showToast('Tambah karyawan baru...')" class="flex items-center gap-1 px-3 py-1.5 rounded-xl gradient-hero text-white active:scale-95" style="font-family:'JetBrains Mono';font-size:11px;font-weight:600">
+    <span class="material-symbols-outlined" style="font-size:16px">person_add</span> Tambah
+  </button>
+</header>
+
+<main class="pt-20 px-4 max-w-2xl mx-auto space-y-5">
+
+  <!-- Stats Row -->
+  <div class="grid grid-cols-3 gap-3">
+    <div class="card p-3 text-center">
+      <div class="w-10 h-10 rounded-xl gradient-hero flex items-center justify-center mx-auto mb-2">
+        <span class="material-symbols-outlined text-white" style="font-size:18px;font-variation-settings:'FILL' 1">people</span>
+      </div>
+      <p style="font-family:'Hanken Grotesk';font-size:22px;font-weight:800;color:#00355f">8</p>
+      <p style="font-family:'JetBrains Mono';font-size:9px;color:#727780">Total Staf</p>
+    </div>
+    <div class="card p-3 text-center">
+      <div class="w-10 h-10 rounded-xl bg-[#d7f7e4] flex items-center justify-center mx-auto mb-2">
+        <span class="material-symbols-outlined text-[#15803d]" style="font-size:18px;font-variation-settings:'FILL' 1">check_circle</span>
+      </div>
+      <p style="font-family:'Hanken Grotesk';font-size:22px;font-weight:800;color:#15803d">8/8</p>
+      <p style="font-family:'JetBrains Mono';font-size:9px;color:#727780">Hadir</p>
+    </div>
+    <div class="card p-3 text-center">
+      <div class="w-10 h-10 rounded-xl bg-[#ffdea8] flex items-center justify-center mx-auto mb-2">
+        <span class="material-symbols-outlined text-[#5e4200]" style="font-size:18px;font-variation-settings:'FILL' 1">stars</span>
+      </div>
+      <p style="font-family:'Hanken Grotesk';font-size:22px;font-weight:800;color:#00355f">4.7</p>
+      <p style="font-family:'JetBrains Mono';font-size:9px;color:#727780">Avg Score</p>
+    </div>
+  </div>
+
+  <!-- Performance Summary -->
+  <div class="card p-5">
+    <div class="flex justify-between items-center mb-4">
+      <h3 style="font-family:'Hanken Grotesk';font-size:16px;font-weight:700;color:#00355f">Kontribusi Penjualan Tim</h3>
+      <span style="font-family:'JetBrains Mono';font-size:10px;color:#727780">Hari ini</span>
+    </div>
+    <div class="space-y-3">
+      <div>
+        <div class="flex justify-between mb-1">
+          <span style="font-size:13px;font-weight:600">Siti Aminah</span>
+          <span style="font-family:'JetBrains Mono';font-size:11px;font-weight:600;color:#00355f">Rp 3,2M · 68 order</span>
+        </div>
+        <div class="perf-bar"><div class="perf-fill bg-primary" style="width:85%"></div></div>
+      </div>
+      <div>
+        <div class="flex justify-between mb-1">
+          <span style="font-size:13px;font-weight:600">Budi Santoso</span>
+          <span style="font-family:'JetBrains Mono';font-size:11px;font-weight:600;color:#00355f">Rp 2,8M · 52 order</span>
+        </div>
+        <div class="perf-bar"><div class="perf-fill bg-primary" style="width:72%"></div></div>
+      </div>
+      <div>
+        <div class="flex justify-between mb-1">
+          <span style="font-size:13px;font-weight:600">Dewi Lestari</span>
+          <span style="font-family:'JetBrains Mono';font-size:11px;font-weight:600;color:#00355f">Rp 2,1M · 45 order</span>
+        </div>
+        <div class="perf-bar"><div class="perf-fill bg-secondary-container" style="width:55%"></div></div>
+      </div>
+      <div>
+        <div class="flex justify-between mb-1">
+          <span style="font-size:13px;font-weight:600">Andi Wijaya</span>
+          <span style="font-family:'JetBrains Mono';font-size:11px;font-weight:600;color:#00355f">Rp 1,7M · 38 order</span>
+        </div>
+        <div class="perf-bar"><div class="perf-fill bg-surface-container-high" style="width:42%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Employee Directory -->
+  <div class="card p-5">
+    <div class="flex justify-between items-center mb-4">
+      <h3 style="font-family:'Hanken Grotesk';font-size:16px;font-weight:700;color:#00355f">Direktori Karyawan</h3>
+      <div class="flex gap-1">
+        <button onclick="filterStaff('semua')" id="fs-semua" class="px-3 py-1 rounded-full text-[10px] font-medium bg-primary text-white" style="font-family:'JetBrains Mono'">Semua</button>
+        <button onclick="filterStaff('pagi')" id="fs-pagi" class="px-3 py-1 rounded-full text-[10px] font-medium bg-surface-container text-on-surface-variant" style="font-family:'JetBrains Mono'">Pagi</button>
+        <button onclick="filterStaff('sore')" id="fs-sore" class="px-3 py-1 rounded-full text-[10px] font-medium bg-surface-container text-on-surface-variant" style="font-family:'JetBrains Mono'">Sore</button>
+      </div>
+    </div>
+    <div class="space-y-2" id="staff-list">
+      <!-- Staff 1 -->
+      <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container-low transition-colors cursor-pointer border border-outline-variant/40 staff-item" data-shift="pagi" onclick="openStaff('Siti Aminah','SM','#0f4c81','Kasir Shift Pagi','Rp 3,2M','68','4.9','8','Hadir')">
+        <div class="w-11 h-11 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-[13px] flex-shrink-0">SA</div>
+        <div class="flex-1">
+          <p style="font-weight:600;font-size:14px">Siti Aminah</p>
+          <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">Kasir · Shift Pagi</p>
+        </div>
+        <div class="text-right">
+          <p style="font-family:'Hanken Grotesk';font-weight:700;color:#00355f">Rp 3,2M</p>
+          <div class="flex items-center gap-0.5 justify-end" style="color:#f1ae00">
+            <span class="material-symbols-outlined star-filled" style="font-size:12px">star</span>
+            <span style="font-family:'JetBrains Mono';font-size:10px">4.9</span>
+          </div>
+        </div>
+        <span style="background:#d7f7e4;color:#15803d;font-family:'JetBrains Mono';font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px">Hadir</span>
+      </div>
+      <!-- Staff 2 -->
+      <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container-low transition-colors cursor-pointer border border-outline-variant/40 staff-item" data-shift="sore" onclick="openStaff('Budi Santoso','BS','#00677d','Kasir Shift Sore','Rp 2,8M','52','4.7','7','Hadir')">
+        <div class="w-11 h-11 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-[13px] flex-shrink-0">BS</div>
+        <div class="flex-1">
+          <p style="font-weight:600;font-size:14px">Budi Santoso</p>
+          <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">Kasir · Shift Sore</p>
+        </div>
+        <div class="text-right">
+          <p style="font-family:'Hanken Grotesk';font-weight:700;color:#00355f">Rp 2,8M</p>
+          <div class="flex items-center gap-0.5 justify-end" style="color:#f1ae00">
+            <span class="material-symbols-outlined star-filled" style="font-size:12px">star</span>
+            <span style="font-family:'JetBrains Mono';font-size:10px">4.7</span>
+          </div>
+        </div>
+        <span style="background:#d7f7e4;color:#15803d;font-family:'JetBrains Mono';font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px">Hadir</span>
+      </div>
+      <!-- Staff 3 -->
+      <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container-low transition-colors cursor-pointer border border-outline-variant/40 staff-item" data-shift="pagi" onclick="openStaff('Dewi Lestari','DL','#463000','Stok & Admin Pagi','Rp 2,1M','45','4.5','6','Hadir')">
+        <div class="w-11 h-11 rounded-full bg-[#ffdea8] text-[#463000] flex items-center justify-center font-bold text-[13px] flex-shrink-0">DL</div>
+        <div class="flex-1">
+          <p style="font-weight:600;font-size:14px">Dewi Lestari</p>
+          <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">Stok & Admin · Pagi</p>
+        </div>
+        <div class="text-right">
+          <p style="font-family:'Hanken Grotesk';font-weight:700;color:#00355f">Rp 2,1M</p>
+          <div class="flex items-center gap-0.5 justify-end" style="color:#f1ae00">
+            <span class="material-symbols-outlined star-filled" style="font-size:12px">star</span>
+            <span style="font-family:'JetBrains Mono';font-size:10px">4.5</span>
+          </div>
+        </div>
+        <span style="background:#d7f7e4;color:#15803d;font-family:'JetBrains Mono';font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px">Hadir</span>
+      </div>
+      <!-- Staff 4 -->
+      <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container-low transition-colors cursor-pointer border border-outline-variant/40 staff-item" data-shift="sore" onclick="openStaff('Andi Wijaya','AW','#727780','Delivery Shift Sore','Rp 1,7M','38','4.3','5','Hadir')">
+        <div class="w-11 h-11 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-[13px] flex-shrink-0">AW</div>
+        <div class="flex-1">
+          <p style="font-weight:600;font-size:14px">Andi Wijaya</p>
+          <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">Delivery · Shift Sore</p>
+        </div>
+        <div class="text-right">
+          <p style="font-family:'Hanken Grotesk';font-weight:700;color:#00355f">Rp 1,7M</p>
+          <div class="flex items-center gap-0.5 justify-end" style="color:#f1ae00">
+            <span class="material-symbols-outlined star-filled" style="font-size:12px">star</span>
+            <span style="font-family:'JetBrains Mono';font-size:10px">4.3</span>
+          </div>
+        </div>
+        <span style="background:#d7f7e4;color:#15803d;font-family:'JetBrains Mono';font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px">Hadir</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Jadwal Shift Hari Ini -->
+  <div class="card p-5">
+    <h3 style="font-family:'Hanken Grotesk';font-size:16px;font-weight:700;color:#00355f;margin-bottom:14px">Jadwal Shift Hari Ini</h3>
+    <div class="space-y-2">
+      <div class="flex items-center gap-3 p-3 rounded-xl bg-primary-fixed border border-primary-container/20">
+        <span class="material-symbols-outlined text-primary" style="font-size:18px;font-variation-settings:'FILL' 1">wb_sunny</span>
+        <div class="flex-1">
+          <p style="font-weight:600;font-size:13px">Shift Pagi 07:00 – 15:00</p>
+          <p style="font-family:'JetBrains Mono';font-size:10px;color:#42474f">Siti Aminah, Dewi Lestari (+2)</p>
+        </div>
+        <span style="font-family:'JetBrains Mono';font-size:9px;font-weight:700;background:#0f4c81;color:white;padding:2px 7px;border-radius:20px">Aktif</span>
+      </div>
+      <div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low border border-outline-variant/40">
+        <span class="material-symbols-outlined text-[#5e4200]" style="font-size:18px;font-variation-settings:'FILL' 1">nights_stay</span>
+        <div class="flex-1">
+          <p style="font-weight:600;font-size:13px">Shift Sore 15:00 – 22:00</p>
+          <p style="font-family:'JetBrains Mono';font-size:10px;color:#42474f">Budi Santoso, Andi Wijaya (+2)</p>
+        </div>
+        <span style="font-family:'JetBrains Mono';font-size:9px;font-weight:700;background:#ffdea8;color:#5e4200;padding:2px 7px;border-radius:20px">15:00</span>
+      </div>
+    </div>
+    <button onclick="showToast('Membuka manajemen jadwal...')" class="w-full mt-3 py-3 rounded-xl text-primary font-semibold border border-outline-variant active:scale-95" style="font-family:'Hanken Grotesk';font-size:14px">
+      Atur Jadwal Shift →
+    </button>
+  </div>
+
+</main>
+
+<!-- Detail Sheet -->
+<div id="detail-sheet">
+  <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeSheet()"></div>
+  <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl z-10 pb-10 slide-up">
+    <div class="w-10 h-1.5 bg-outline-variant rounded-full mx-auto mt-3 mb-4"></div>
+    <div class="px-5">
+      <div class="flex items-center gap-4 mb-5">
+        <div id="d-avatar" class="w-16 h-16 rounded-2xl flex items-center justify-center font-bold text-white text-[18px] flex-shrink-0"></div>
+        <div>
+          <h3 id="d-name" style="font-family:'Hanken Grotesk';font-size:18px;font-weight:800;color:#00355f"></h3>
+          <p id="d-role" style="font-family:'JetBrains Mono';font-size:11px;color:#727780"></p>
+        </div>
+        <span id="d-status" class="ml-auto" style="font-family:'JetBrains Mono';font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:#d7f7e4;color:#15803d"></span>
+      </div>
+      <div class="grid grid-cols-3 gap-3 mb-5">
+        <div class="bg-surface-container-low p-3 rounded-xl text-center">
+          <p id="d-sales" style="font-family:'Hanken Grotesk';font-size:16px;font-weight:800;color:#00355f"></p>
+          <p style="font-family:'JetBrains Mono';font-size:9px;color:#727780">Penjualan</p>
+        </div>
+        <div class="bg-surface-container-low p-3 rounded-xl text-center">
+          <p id="d-orders" style="font-family:'Hanken Grotesk';font-size:16px;font-weight:800;color:#00355f"></p>
+          <p style="font-family:'JetBrains Mono';font-size:9px;color:#727780">Order</p>
+        </div>
+        <div class="bg-[#ffdea8] p-3 rounded-xl text-center">
+          <p id="d-score" style="font-family:'Hanken Grotesk';font-size:16px;font-weight:800;color:#5e4200"></p>
+          <p style="font-family:'JetBrains Mono';font-size:9px;color:#5e4200">Rating</p>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <button onclick="showToast('WhatsApp dibuka...');closeSheet()" class="flex-1 py-3 rounded-xl text-white gradient-hero font-semibold active:scale-95" style="font-family:'Hanken Grotesk';font-size:14px">
+          <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle">chat</span> Chat
+        </button>
+        <button onclick="showToast('Laporan kinerja dibuka...');closeSheet()" class="flex-1 py-3 rounded-xl border border-outline-variant text-primary font-semibold active:scale-95" style="font-family:'Hanken Grotesk';font-size:14px">
+          <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle">analytics</span> Kinerja
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav class="fixed bottom-0 w-full z-50 bg-surface border-t border-outline-variant shadow-lg flex justify-around items-center h-16 px-2">
+  <a href="HOME.html" class="nav-link"><span class="material-symbols-outlined" style="font-size:22px">dashboard</span>Home</a>
+  <a href="Laporan.html" class="nav-link"><span class="material-symbols-outlined" style="font-size:22px">analytics</span>Laporan</a>
+  <a href="Manajemen.html" class="nav-link active"><span class="material-symbols-outlined" style="font-size:22px;font-variation-settings:'FILL' 1">badge</span>Staf</a>
+  <a href="Keuangan.html" class="nav-link"><span class="material-symbols-outlined" style="font-size:22px">payments</span>Keuangan</a>
+</nav>
+
+<script>
+function showToast(msg){const t=document.createElement('div');t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#00355f;color:white;padding:12px 20px;border-radius:14px;font-family:JetBrains Mono,monospace;font-size:12px;font-weight:600;z-index:999;white-space:nowrap';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2800)}
+function openStaff(name,initials,color,role,sales,orders,score,leave,status){
+  document.getElementById('d-avatar').style.background=color;
+  document.getElementById('d-avatar').textContent=initials;
+  document.getElementById('d-name').textContent=name;
+  document.getElementById('d-role').textContent=role;
+  document.getElementById('d-sales').textContent=sales;
+  document.getElementById('d-orders').textContent=orders+' order';
+  document.getElementById('d-score').textContent='★ '+score;
+  document.getElementById('d-status').textContent=status;
+  document.getElementById('detail-sheet').classList.add('show');
+}
+function closeSheet(){document.getElementById('detail-sheet').classList.remove('show')}
+function filterStaff(shift){
+  document.querySelectorAll('[id^="fs-"]').forEach(b=>{b.className='px-3 py-1 rounded-full text-[10px] font-medium bg-surface-container text-on-surface-variant'});
+  document.getElementById('fs-'+shift).className='px-3 py-1 rounded-full text-[10px] font-medium bg-primary text-white';
+  document.querySelectorAll('.staff-item').forEach(el=>{
+    el.style.display=(shift==='semua'||el.dataset.shift===shift)?'flex':'none';
+  });
+}
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.perf-fill').forEach(b=>{const w=b.style.width;b.style.width='0%';setTimeout(()=>b.style.width=w,100)})});
+</script>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KemasToko Owner — Keuangan</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Hanken+Grotesk:wght@600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script>tailwind.config={theme:{extend:{colors:{primary:"#00355f","primary-container":"#0f4c81","on-primary":"#ffffff","on-primary-container":"#8ebdf9","primary-fixed":"#d2e4ff","surface":"#f8f9fa","surface-container-lowest":"#ffffff","surface-container-low":"#f3f4f5","surface-container":"#edeeef","surface-container-high":"#e7e8e9","on-surface":"#191c1d","on-surface-variant":"#42474f","outline":"#727780","outline-variant":"#c2c7d1","secondary":"#00677d","secondary-container":"#50d9fe","on-secondary-container":"#005c70","tertiary":"#463000","tertiary-fixed":"#ffdea8","on-tertiary-fixed-variant":"#5e4200","on-tertiary-container":"#f1ae00","error":"#ba1a1a","error-container":"#ffdad6","on-error-container":"#93000a"}}}}</script>
+<style>
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+body{background:#f3f4f5;font-family:'Inter',sans-serif;-webkit-tap-highlight-color:transparent}
+.card{background:#fff;border:1px solid #e1e3e4;border-radius:16px;box-shadow:0 2px 12px -4px rgba(0,53,95,.08);transition:box-shadow .2s,transform .15s}
+.card:active{transform:scale(.98)}
+.nav-link{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 16px;border-radius:20px;transition:all .2s;color:#727780;font-size:10px;font-family:'JetBrains Mono',monospace;font-weight:500;cursor:pointer;text-decoration:none}
+.nav-link.active{background:#50d9fe;color:#005c70}
+.gradient-hero{background:linear-gradient(135deg,#00355f 0%,#0f4c81 60%,#2d6197 100%)}
+.bar{transition:height .8s cubic-bezier(.4,0,.2,1);border-radius:6px 6px 0 0}
+.tab-active{background:#00355f;color:white}
+.tab-btn{font-family:'JetBrains Mono';font-size:11px;padding:6px 14px;border-radius:20px;transition:all .15s;color:#42474f}
+#detail-sheet{display:none;position:fixed;inset:0;z-index:200}
+#detail-sheet.show{display:flex}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.slide-up{animation:slideUp .3s cubic-bezier(.4,0,.2,1)}
+.pulse-dot{animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes countUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.count-up{animation:countUp .6s ease forwards}
+</style>
+</head>
+<body class="min-h-screen pb-24 text-on-surface">
+
+<header class="fixed top-0 w-full z-50 bg-surface/95 backdrop-blur-md shadow-sm flex justify-between items-center px-4 h-16 border-b border-outline-variant/40">
+  <div class="flex items-center gap-3">
+    <a href="OWNER_HOME.html" class="material-symbols-outlined text-primary p-1 active:scale-90">arrow_back</a>
+    <div>
+      <h1 style="font-family:'Hanken Grotesk';font-size:18px;font-weight:800;color:#00355f">Keuangan Toko</h1>
+      <p style="font-family:'JetBrains Mono';font-size:9px;color:#727780;letter-spacing:.04em">OWNER DASHBOARD · KemasToko</p>
+    </div>
+  </div>
+  <div class="flex gap-2">
+    <button onclick="exportExcel()" class="flex items-center gap-1 px-3 py-1.5 rounded-xl active:scale-95" style="background:#ffdea8;color:#5e4200;font-family:'JetBrains Mono';font-size:11px;font-weight:600">
+      <span class="material-symbols-outlined" style="font-size:16px">download</span> Excel
+    </button>
+  </div>
+</header>
+
+<main class="pt-20 px-4 max-w-2xl mx-auto space-y-5">
+
+  <!-- Period Tabs -->
+  <div class="flex gap-2 overflow-x-auto pb-1" style="scrollbar-width:none">
+    <button onclick="setPeriod(this,'hari')" class="tab-btn tab-active whitespace-nowrap">Hari Ini</button>
+    <button onclick="setPeriod(this,'minggu')" class="tab-btn bg-white border border-outline-variant whitespace-nowrap">Minggu</button>
+    <button onclick="setPeriod(this,'bulan')" class="tab-btn bg-white border border-outline-variant whitespace-nowrap">Bulan</button>
+    <button onclick="setPeriod(this,'tahun')" class="tab-btn bg-white border border-outline-variant whitespace-nowrap">Tahun</button>
+  </div>
+
+  <!-- Hero Balance Card -->
+  <div class="gradient-hero rounded-2xl p-5 relative overflow-hidden">
+    <div class="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-white opacity-5"></div>
+    <div class="absolute -bottom-6 -left-6 w-24 h-24 rounded-full bg-white opacity-5"></div>
+    <div class="relative z-10">
+      <div class="flex justify-between items-start mb-4">
+        <div>
+          <p style="font-family:'JetBrains Mono';font-size:10px;color:#a0c9ff;letter-spacing:.05em;text-transform:uppercase">Total Saldo Rekening</p>
+          <h2 id="hero-saldo" class="count-up" style="font-family:'Hanken Grotesk';font-size:34px;font-weight:800;color:white;margin-top:4px;letter-spacing:-1px">Rp 482.150.000</h2>
+        </div>
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl" style="background:rgba(255,255,255,0.12)">
+          <div class="w-2 h-2 rounded-full bg-[#4ade80] pulse-dot"></div>
+          <span style="font-family:'JetBrains Mono';font-size:10px;color:white">Live</span>
+        </div>
+      </div>
+      <!-- 3 Mini Metrics -->
+      <div class="grid grid-cols-3 gap-3">
+        <div class="rounded-xl p-3" style="background:rgba(255,255,255,0.10)">
+          <p style="font-family:'JetBrains Mono';font-size:9px;color:#a0c9ff;margin-bottom:3px">Pemasukan</p>
+          <p style="font-family:'Hanken Grotesk';font-size:15px;font-weight:700;color:#4ade80" id="mini-masuk">+45,3Jt</p>
+        </div>
+        <div class="rounded-xl p-3" style="background:rgba(255,255,255,0.10)">
+          <p style="font-family:'JetBrains Mono';font-size:9px;color:#a0c9ff;margin-bottom:3px">Pengeluaran</p>
+          <p style="font-family:'Hanken Grotesk';font-size:15px;font-weight:700;color:#f87171" id="mini-keluar">-31,2Jt</p>
+        </div>
+        <div class="rounded-xl p-3" style="background:rgba(255,255,255,0.10)">
+          <p style="font-family:'JetBrains Mono';font-size:9px;color:#a0c9ff;margin-bottom:3px">Laba Bersih</p>
+          <p style="font-family:'Hanken Grotesk';font-size:15px;font-weight:700;color:#fbbf24" id="mini-laba">14,1Jt</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Revenue vs Expense Chart -->
+  <div class="card p-5">
+    <div class="flex justify-between items-center mb-4">
+      <h3 style="font-family:'Hanken Grotesk';font-size:16px;font-weight:700;color:#00355f">Pemasukan vs Pengeluaran</h3>
+      <span style="font-family:'JetBrains Mono';font-size:10px;color:#727780">Jun 2026</span>
+    </div>
+    <div class="flex items-end gap-2 h-36 mb-2" id="fin-chart">
+      <!-- Week bars, pemasukan=blue, pengeluaran=red pair -->
+      <div class="flex-1 flex gap-0.5 items-end">
+        <div class="bar flex-1 bg-primary" style="height:60%"></div>
+        <div class="bar flex-1 bg-error/30" style="height:42%"></div>
+      </div>
+      <div class="flex-1 flex gap-0.5 items-end">
+        <div class="bar flex-1 bg-primary" style="height:75%"></div>
+        <div class="bar flex-1 bg-error/30" style="height:50%"></div>
+      </div>
+      <div class="flex-1 flex gap-0.5 items-end">
+        <div class="bar flex-1 bg-primary" style="height:55%"></div>
+        <div class="bar flex-1 bg-error/30" style="height:38%"></div>
+      </div>
+      <div class="flex-1 flex gap-0.5 items-end">
+        <div class="bar flex-1 bg-primary" style="height:85%"></div>
+        <div class="bar flex-1 bg-error/30" style="height:60%"></div>
+      </div>
+      <div class="flex-1 flex gap-0.5 items-end">
+        <div class="bar flex-1 bg-primary" style="height:70%"></div>
+        <div class="bar flex-1 bg-error/30" style="height:48%"></div>
+      </div>
+      <div class="flex-1 flex gap-0.5 items-end">
+        <div class="bar flex-1 bg-primary" style="height:90%"></div>
+        <div class="bar flex-1 bg-error/30" style="height:65%"></div>
+      </div>
+      <div class="flex-1 flex gap-0.5 items-end">
+        <div class="bar flex-1 bg-secondary-container" style="height:100%"></div>
+        <div class="bar flex-1 bg-error/50" style="height:70%"></div>
+      </div>
+    </div>
+    <div class="flex gap-4 mt-2">
+      <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-sm bg-primary"></div><span style="font-family:'JetBrains Mono';font-size:10px;color:#42474f">Pemasukan</span></div>
+      <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-sm bg-error/40"></div><span style="font-family:'JetBrains Mono';font-size:10px;color:#42474f">Pengeluaran</span></div>
+    </div>
+  </div>
+
+  <!-- 4 Financial Metrics -->
+  <div class="grid grid-cols-2 gap-3">
+    <div class="card p-4 cursor-pointer" onclick="openDetail('neraca')">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="w-8 h-8 rounded-lg bg-primary-fixed flex items-center justify-center">
+          <span class="material-symbols-outlined text-primary" style="font-size:16px;font-variation-settings:'FILL' 1">balance</span>
+        </div>
+        <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">Neraca</p>
+      </div>
+      <p style="font-family:'Hanken Grotesk';font-size:18px;font-weight:800;color:#00355f">Rp 124,9M</p>
+      <p style="font-family:'JetBrains Mono';font-size:10px;color:#15803d;margin-top:2px">Total Aset</p>
+    </div>
+    <div class="card p-4 cursor-pointer" onclick="openDetail('laba')">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="w-8 h-8 rounded-lg bg-[#b3ebff] flex items-center justify-center">
+          <span class="material-symbols-outlined text-secondary" style="font-size:16px;font-variation-settings:'FILL' 1">trending_up</span>
+        </div>
+        <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">Laba Rugi</p>
+      </div>
+      <p style="font-family:'Hanken Grotesk';font-size:18px;font-weight:800;color:#00355f">Rp 14,1M</p>
+      <p style="font-family:'JetBrains Mono';font-size:10px;color:#15803d;margin-top:2px">Laba Bersih Hari Ini</p>
+    </div>
+    <div class="card p-4 cursor-pointer" onclick="openDetail('kas')">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="w-8 h-8 rounded-lg bg-[#ffdea8] flex items-center justify-center">
+          <span class="material-symbols-outlined text-[#5e4200]" style="font-size:16px;font-variation-settings:'FILL' 1">account_balance</span>
+        </div>
+        <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">Arus Kas</p>
+      </div>
+      <p style="font-family:'Hanken Grotesk';font-size:18px;font-weight:800;color:#00355f">Rp 9,8M</p>
+      <p style="font-family:'JetBrains Mono';font-size:10px;color:#15803d;margin-top:2px">Cash Flow Positif</p>
+    </div>
+    <div class="card p-4 cursor-pointer" onclick="openDetail('modal')">
+      <div class="flex items-center gap-2 mb-2">
+        <div class="w-8 h-8 rounded-lg bg-error-container flex items-center justify-center">
+          <span class="material-symbols-outlined text-error" style="font-size:16px;font-variation-settings:'FILL' 1">payments</span>
+        </div>
+        <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">Hutang / Modal</p>
+      </div>
+      <p style="font-family:'Hanken Grotesk';font-size:18px;font-weight:800;color:#00355f">Rp 28,4M</p>
+      <p style="font-family:'JetBrains Mono';font-size:10px;color:#ba1a1a;margin-top:2px">Kewajiban Berjalan</p>
+    </div>
+  </div>
+
+  <!-- Riwayat Transaksi Keuangan -->
+  <div class="card p-5">
+    <div class="flex justify-between items-center mb-4">
+      <h3 style="font-family:'Hanken Grotesk';font-size:16px;font-weight:700;color:#00355f">Arus Kas Terkini</h3>
+      <button onclick="exportExcel()" class="flex items-center gap-1 text-primary active:scale-95" style="font-family:'JetBrains Mono';font-size:11px;font-weight:600">
+        <span class="material-symbols-outlined" style="font-size:16px">table_view</span> Export
+      </button>
+    </div>
+    <div class="space-y-2" id="kas-list">
+      <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container-low transition-colors cursor-pointer" onclick="openDetail('kas')">
+        <div class="w-9 h-9 rounded-xl bg-[#d7f7e4] flex items-center justify-center flex-shrink-0">
+          <span class="material-symbols-outlined text-[#15803d]" style="font-size:16px;font-variation-settings:'FILL' 1">add_circle</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p style="font-size:13px;font-weight:600">Penjualan Kasir #TRX-0047</p>
+          <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">14:22 WIB · Tunai</p>
+        </div>
+        <span style="font-family:'Hanken Grotesk';font-weight:700;color:#15803d">+Rp 67.500</span>
+      </div>
+      <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container-low transition-colors cursor-pointer" onclick="openDetail('kas')">
+        <div class="w-9 h-9 rounded-xl bg-[#d7f7e4] flex items-center justify-center flex-shrink-0">
+          <span class="material-symbols-outlined text-[#15803d]" style="font-size:16px;font-variation-settings:'FILL' 1">add_circle</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p style="font-size:13px;font-weight:600">Penjualan Kasir #TRX-0046</p>
+          <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">13:55 WIB · QRIS</p>
+        </div>
+        <span style="font-family:'Hanken Grotesk';font-weight:700;color:#15803d">+Rp 28.500</span>
+      </div>
+      <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container-low transition-colors cursor-pointer" onclick="openDetail('kas')">
+        <div class="w-9 h-9 rounded-xl bg-error-container flex items-center justify-center flex-shrink-0">
+          <span class="material-symbols-outlined text-error" style="font-size:16px;font-variation-settings:'FILL' 1">remove_circle</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p style="font-size:13px;font-weight:600">Beli Stok Distributor</p>
+          <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">11:00 WIB · Transfer</p>
+        </div>
+        <span style="font-family:'Hanken Grotesk';font-weight:700;color:#ba1a1a">-Rp 2.240.000</span>
+      </div>
+      <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container-low transition-colors cursor-pointer" onclick="openDetail('kas')">
+        <div class="w-9 h-9 rounded-xl bg-error-container flex items-center justify-center flex-shrink-0">
+          <span class="material-symbols-outlined text-error" style="font-size:16px;font-variation-settings:'FILL' 1">remove_circle</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p style="font-size:13px;font-weight:600">Gaji Staf Shift Pagi</p>
+          <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">08:00 WIB · Transfer</p>
+        </div>
+        <span style="font-family:'Hanken Grotesk';font-weight:700;color:#ba1a1a">-Rp 4.800.000</span>
+      </div>
+      <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container-low transition-colors cursor-pointer" onclick="openDetail('kas')">
+        <div class="w-9 h-9 rounded-xl bg-primary-fixed flex items-center justify-center flex-shrink-0">
+          <span class="material-symbols-outlined text-primary" style="font-size:16px;font-variation-settings:'FILL' 1">receipt</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p style="font-size:13px;font-weight:600">Pembayaran Invoice INV-046</p>
+          <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">07:30 WIB · Bank Transfer</p>
+        </div>
+        <span style="font-family:'Hanken Grotesk';font-weight:700;color:#15803d">+Rp 22.000.000</span>
+      </div>
+    </div>
+    <button onclick="showToast('Memuat semua transaksi...')" class="w-full mt-3 py-3 rounded-xl border border-outline-variant text-primary font-semibold active:scale-95" style="font-family:'Hanken Grotesk';font-size:14px">
+      Lihat Semua Transaksi →
+    </button>
+  </div>
+
+  <!-- Pajak Summary Banner -->
+  <div class="rounded-2xl overflow-hidden cursor-pointer active:scale-95" style="background:linear-gradient(135deg,#00355f,#0043A4)" onclick="showToast('Membuka Modul Pajak Coretax...')">
+    <div class="p-4 flex items-center gap-4">
+      <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(255,255,255,0.12)">
+        <span class="material-symbols-outlined text-white" style="font-size:24px;font-variation-settings:'FILL' 1">workspace_premium</span>
+      </div>
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-1">
+          <p style="font-family:'Hanken Grotesk';font-size:14px;font-weight:700;color:white">Modul Pajak Coretax</p>
+          <span style="background:#50d9fe;color:#005c70;font-family:'JetBrains Mono';font-size:9px;font-weight:700;padding:1px 6px;border-radius:20px">Premium</span>
+        </div>
+        <p style="font-family:'JetBrains Mono';font-size:10px;color:#a0c9ff">PPN Masa Jun: <b style="color:#4ade80">Rp 1,22Jt Lunas ✓</b> · PPh 21: <b style="color:#fbbf24">Menunggu</b></p>
+      </div>
+      <span class="material-symbols-outlined text-white" style="font-size:20px">chevron_right</span>
+    </div>
+  </div>
+
+</main>
+
+<!-- Detail Sheet -->
+<div id="detail-sheet">
+  <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeSheet()"></div>
+  <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl z-10 slide-up" style="max-height:80vh;overflow-y:auto">
+    <div class="w-10 h-1.5 bg-outline-variant rounded-full mx-auto mt-3 mb-4"></div>
+    <div class="px-5 pb-8">
+      <div class="flex justify-between items-center mb-4">
+        <h3 id="sheet-title" style="font-family:'Hanken Grotesk';font-size:17px;font-weight:800;color:#00355f"></h3>
+        <button onclick="exportExcel()" class="flex items-center gap-1 px-3 py-1.5 rounded-xl active:scale-95" style="background:#ffdea8;color:#5e4200;font-family:'JetBrains Mono';font-size:11px;font-weight:600">
+          <span class="material-symbols-outlined" style="font-size:14px">download</span> Export
+        </button>
+      </div>
+      <div id="sheet-content"></div>
+    </div>
+  </div>
+</div>
+
+<nav class="fixed bottom-0 w-full z-50 bg-surface border-t border-outline-variant shadow-lg flex justify-around items-center h-16 px-2">
+  <a href="HOME.html" class="nav-link"><span class="material-symbols-outlined" style="font-size:22px">dashboard</span>Home</a>
+  <a href="Laporan.html" class="nav-link"><span class="material-symbols-outlined" style="font-size:22px">analytics</span>Laporan</a>
+  <a href="Manajemen.html" class="nav-link"><span class="material-symbols-outlined" style="font-size:22px">badge</span>Staf</a>
+  <a href="Laporan.html" class="nav-link active"><span class="material-symbols-outlined" style="font-size:22px;font-variation-settings:'FILL' 1">payments</span>Keuangan</a>
+</nav>
+
+<script>
+const detailData={
+  neraca:{title:'Neraca Keuangan',rows:[['Aset Lancar','Rp 82.150.000'],['Aset Tetap','Rp 42.750.000'],['Total Aset','Rp 124.900.000'],['Kewajiban Lancar','Rp 28.400.000'],['Modal Disetor','Rp 96.500.000']]},
+  laba:{title:'Laporan Laba Rugi',rows:[['Pendapatan Bruto','Rp 45.280.000'],['HPP','Rp 14.310.000'],['Laba Kotor','Rp 30.970.000'],['Beban Operasional','Rp 16.870.000'],['Laba Bersih','Rp 14.100.000']]},
+  kas:{title:'Laporan Arus Kas',rows:[['Kas Masuk Operasional','Rp 45.280.000'],['Kas Keluar Operasional','Rp 31.180.000'],['Arus Kas Bersih','Rp 14.100.000'],['Saldo Awal','Rp 468.050.000'],['Saldo Akhir','Rp 482.150.000']]},
+  modal:{title:'Kewajiban & Modal',rows:[['Hutang Dagang','Rp 14.200.000'],['Hutang Jangka Pendek','Rp 8.600.000'],['Cicilan Pinjaman','Rp 5.600.000'],['Total Kewajiban','Rp 28.400.000'],['Modal Bersih','Rp 96.500.000']]},
+};
+function openDetail(type){
+  const d=detailData[type];
+  document.getElementById('sheet-title').textContent=d.title;
+  document.getElementById('sheet-content').innerHTML=`
+    <div class="space-y-2">
+      ${d.rows.map((r,i)=>`
+        <div class="flex justify-between p-3 rounded-xl ${i===d.rows.length-1?'gradient-hero':'bg-surface-container-low border border-outline-variant/40'}">
+          <span style="font-size:13px;${i===d.rows.length-1?'color:white;font-weight:600':'color:#42474f'}">${r[0]}</span>
+          <span style="font-family:'Hanken Grotesk';font-size:14px;font-weight:700;${i===d.rows.length-1?'color:white':'color:#00355f'}">${r[1]}</span>
+        </div>`).join('')}
+    </div>`;
+  document.getElementById('detail-sheet').classList.add('show');
+}
+function closeSheet(){document.getElementById('detail-sheet').classList.remove('show')}
+
+const periodData={
+  hari:{saldo:'Rp 482.150.000',masuk:'+45,3Jt',keluar:'-31,2Jt',laba:'14,1Jt'},
+  minggu:{saldo:'Rp 482.150.000',masuk:'+312Jt',keluar:'-218Jt',laba:'94Jt'},
+  bulan:{saldo:'Rp 482.150.000',masuk:'+1,4M',keluar:'-960Jt',laba:'440Jt'},
+  tahun:{saldo:'Rp 482.150.000',masuk:'+16,8M',keluar:'-11,5M',laba:'5,3M'},
+};
+function setPeriod(el,p){
+  document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('tab-active');b.classList.add('bg-white','border','border-outline-variant')});
+  el.classList.add('tab-active');el.classList.remove('bg-white','border','border-outline-variant');
+  const d=periodData[p];
+  document.getElementById('hero-saldo').textContent=d.saldo;
+  document.getElementById('mini-masuk').textContent=d.masuk;
+  document.getElementById('mini-keluar').textContent=d.keluar;
+  document.getElementById('mini-laba').textContent=d.laba;
+}
+
+function exportExcel(){
+  const wb=XLSX.utils.book_new();
+  const data=[
+    ['LAPORAN KEUANGAN — KemasToko Owner Dashboard'],['Periode: Juni 2026'],[''],
+    ['NERACA'],['Aset Lancar','82.150.000'],['Aset Tetap','42.750.000'],['Total Aset','124.900.000'],[''],
+    ['LABA RUGI'],['Pendapatan Bruto','45.280.000'],['HPP','14.310.000'],['Laba Bersih','14.100.000'],[''],
+    ['ARUS KAS'],['Kas Masuk','45.280.000'],['Kas Keluar','31.180.000'],['Arus Kas Bersih','14.100.000'],[''],
+    ['RIWAYAT TRANSAKSI'],['Waktu','Keterangan','Jumlah','Metode'],
+    ['14:22','Penjualan #TRX-0047','+67.500','Tunai'],
+    ['13:55','Penjualan #TRX-0046','+28.500','QRIS'],
+    ['11:00','Beli Stok Distributor','-2.240.000','Transfer'],
+    ['08:00','Gaji Staf Shift Pagi','-4.800.000','Transfer'],
+    ['07:30','Pembayaran Invoice INV-046','+22.000.000','Transfer'],
+  ];
+  const ws=XLSX.utils.aoa_to_sheet(data);
+  ws['!cols']=[{wch:25},{wch:30},{wch:18},{wch:15}];
+  XLSX.utils.book_append_sheet(wb,ws,'Keuangan');
+  XLSX.writeFile(wb,'KemasToko_Owner_Keuangan_Juni2026.xlsx');
+  showToast('✅ Laporan Keuangan berhasil diexport!');
+}
+
+function showToast(msg){
+  const t=document.createElement('div');
+  t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#00355f;color:white;padding:12px 20px;border-radius:14px;font-family:JetBrains Mono,monospace;font-size:12px;font-weight:600;z-index:999;white-space:nowrap;box-shadow:0 4px 16px rgba(0,53,95,.3)';
+  t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2800);
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.bar').forEach(b=>{const h=b.style.height;b.style.height='0%';setTimeout(()=>b.style.height=h,100)});
+});
+</script>
+</body>
+</html>

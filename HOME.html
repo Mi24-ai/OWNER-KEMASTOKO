@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KemasToko Owner — Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Hanken+Grotesk:wght@600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script>tailwind.config={theme:{extend:{colors:{primary:"#00355f","primary-container":"#0f4c81","on-primary":"#ffffff","on-primary-container":"#8ebdf9","primary-fixed":"#d2e4ff","surface":"#f8f9fa","surface-container-lowest":"#ffffff","surface-container-low":"#f3f4f5","surface-container":"#edeeef","surface-container-high":"#e7e8e9","surface-container-highest":"#e1e3e4","on-surface":"#191c1d","on-surface-variant":"#42474f","outline":"#727780","outline-variant":"#c2c7d1","secondary":"#00677d","secondary-container":"#50d9fe","on-secondary-container":"#005c70","tertiary":"#463000","tertiary-fixed":"#ffdea8","tertiary-fixed-dim":"#ffba20","on-tertiary-fixed-variant":"#5e4200","on-tertiary-container":"#f1ae00","error":"#ba1a1a","error-container":"#ffdad6","on-error-container":"#93000a"}}}}</script>
+<style>
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+body{background:#f3f4f5;font-family:'Inter',sans-serif;-webkit-tap-highlight-color:transparent}
+.card{background:#fff;border:1px solid #e1e3e4;border-radius:16px;box-shadow:0 2px 12px -4px rgba(0,53,95,.08);transition:box-shadow .2s,transform .15s}
+.card:hover{box-shadow:0 8px 28px -6px rgba(0,53,95,.14)}
+.card:active{transform:scale(.98)}
+.nav-link{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 16px;border-radius:20px;transition:all .2s;color:#727780;font-size:10px;font-family:'JetBrains Mono',monospace;font-weight:500;cursor:pointer;text-decoration:none}
+.nav-link.active{background:#50d9fe;color:#005c70}
+.nav-link:not(.active):hover{background:#edeeef}
+.bar{transition:height .8s cubic-bezier(.4,0,.2,1);border-radius:6px 6px 0 0}
+.pulse-dot{animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.slide-in{animation:slideIn .4s cubic-bezier(.4,0,.2,1)}
+@keyframes slideIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.gradient-hero{background:linear-gradient(135deg,#00355f 0%,#0f4c81 60%,#2d6197 100%)}
+.stat-up{color:#15803d}
+.stat-dn{color:#ba1a1a}
+.ring{transform:rotate(-90deg);transform-origin:center}
+@keyframes ring-in{from{stroke-dashoffset:220}to{stroke-dashoffset:var(--end)}}
+.ring-anim{animation:ring-in 1.2s cubic-bezier(.4,0,.2,1) forwards}
+.hide-scroll::-webkit-scrollbar{display:none}
+.hide-scroll{-ms-overflow-style:none;scrollbar-width:none}
+</style>
+</head>
+<body class="min-h-screen pb-24 text-on-surface">
+
+<!-- ── HEADER ── -->
+<header class="fixed top-0 w-full z-50 bg-surface/95 backdrop-blur-md shadow-sm flex justify-between items-center px-4 h-16 border-b border-outline-variant/40">
+  <div class="flex items-center gap-3">
+    <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container shadow-sm">
+      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkj50rlpbHriScGLIxvE-SxlTVsZ41Zdk1KhAt45R3Fan34EcPYsrHdGC8FegaIf5QQt7DWZYXeAs4axrdvlWaaYKCaOqNDzH_nDVlgeBqH5Kw99lzNTl2DVTvU5TPeKzOxIUWyHGpOKMaoEwDzLUrUSQeWumry9t_Oj3TOXGdVjfbsgT3KOYfpACMnY4vnzRAjh25K2YDbuqB8CUG-qG78KdfAp1GE4WwCsa2b8KIZ1FzevBIt9oFVH5wVcKrwo8M6yP3niTsOQ" class="w-full h-full object-cover" alt="Owner"/>
+    </div>
+    <div>
+      <span style="font-family:'Hanken Grotesk';font-size:18px;font-weight:800;color:#00355f">Kemas</span><span style="font-family:'Hanken Grotesk';font-size:18px;font-weight:800;color:#50d9fe">Toko</span>
+      <span style="font-family:'JetBrains Mono';font-size:9px;font-weight:500;color:#727780;display:block;margin-top:-2px;letter-spacing:.04em">OWNER DASHBOARD</span>
+    </div>
+  </div>
+  <div class="flex items-center gap-2">
+    <div class="relative">
+      <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors active:scale-95">
+        <span class="material-symbols-outlined text-primary">notifications</span>
+      </button>
+      <span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-error rounded-full border-2 border-surface pulse-dot"></span>
+    </div>
+    <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors active:scale-95">
+      <span class="material-symbols-outlined text-primary">settings</span>
+    </button>
+  </div>
+</header>
+
+<main class="pt-20 px-4 max-w-2xl mx-auto space-y-5">
+
+  <!-- ── GREETING ── -->
+  <section class="slide-in">
+    <div class="flex items-center justify-between">
+      <div>
+        <p style="font-family:'JetBrains Mono';font-size:11px;color:#727780;letter-spacing:.05em">Selasa, 10 Juni 2026</p>
+        <h1 style="font-family:'Hanken Grotesk';font-size:26px;font-weight:800;color:#00355f;margin-top:2px">Selamat datang, Aditya 👋</h1>
+        <p style="font-size:13px;color:#42474f;margin-top:2px">Bisnis Anda tumbuh <span style="color:#15803d;font-weight:600">+14%</span> hari ini — terus semangat!</p>
+      </div>
+      <div class="flex-shrink-0 w-14 h-14 rounded-2xl gradient-hero flex flex-col items-center justify-center shadow-lg">
+        <span style="font-family:'Hanken Grotesk';font-size:20px;font-weight:800;color:white">10</span>
+        <span style="font-family:'JetBrains Mono';font-size:8px;color:#a0c9ff;letter-spacing:.05em">JUN</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 3 KPI UTAMA ── -->
+  <div class="grid grid-cols-3 gap-3 slide-in">
+    <div class="card p-3 text-center cursor-pointer" onclick="goTo('OWNER_LAPORAN.html')">
+      <div class="w-9 h-9 rounded-xl bg-primary-fixed mx-auto flex items-center justify-center mb-2">
+        <span class="material-symbols-outlined text-primary" style="font-size:18px;font-variation-settings:'FILL' 1">trending_up</span>
+      </div>
+      <p style="font-family:'Hanken Grotesk';font-size:18px;font-weight:800;color:#00355f">12,4M</p>
+      <p style="font-family:'JetBrains Mono';font-size:9px;color:#727780">Penjualan</p>
+      <p class="stat-up" style="font-family:'JetBrains Mono';font-size:9px;font-weight:600">↑ +14%</p>
+    </div>
+    <div class="card p-3 text-center cursor-pointer" onclick="goTo('OWNER_KEUANGAN.html')">
+      <div class="w-9 h-9 rounded-xl bg-[#b3ebff] mx-auto flex items-center justify-center mb-2">
+        <span class="material-symbols-outlined text-secondary" style="font-size:18px;font-variation-settings:'FILL' 1">account_balance_wallet</span>
+      </div>
+      <p style="font-family:'Hanken Grotesk';font-size:18px;font-weight:800;color:#00355f">482M</p>
+      <p style="font-family:'JetBrains Mono';font-size:9px;color:#727780">Saldo Bank</p>
+      <p class="stat-up" style="font-family:'JetBrains Mono';font-size:9px;font-weight:600">↑ +12.4%</p>
+    </div>
+    <div class="card p-3 text-center cursor-pointer" onclick="goTo('OWNER_MANAJEMEN.html')">
+      <div class="w-9 h-9 rounded-xl bg-[#ffdea8] mx-auto flex items-center justify-center mb-2">
+        <span class="material-symbols-outlined text-[#5e4200]" style="font-size:18px;font-variation-settings:'FILL' 1">people</span>
+      </div>
+      <p style="font-family:'Hanken Grotesk';font-size:18px;font-weight:800;color:#00355f">8 Staf</p>
+      <p style="font-family:'JetBrains Mono';font-size:9px;color:#727780">Karyawan</p>
+      <p style="font-family:'JetBrains Mono';font-size:9px;color:#15803d;font-weight:600">✓ Semua Hadir</p>
+    </div>
+  </div>
+
+  <!-- ── HERO REVENUE CHART ── -->
+  <div class="card p-5 slide-in">
+    <div class="flex justify-between items-center mb-4">
+      <div>
+        <h3 style="font-family:'Hanken Grotesk';font-size:16px;font-weight:700;color:#00355f">Tren Penjualan 7 Hari</h3>
+        <p style="font-family:'JetBrains Mono';font-size:11px;color:#727780">Total minggu ini: <span style="color:#00355f;font-weight:600">Rp 82.350.000</span></p>
+      </div>
+      <div class="flex gap-1">
+        <button onclick="setChart('minggu')" id="btn-minggu" class="px-3 py-1.5 rounded-full text-[11px] font-medium bg-primary text-white" style="font-family:'JetBrains Mono'">Minggu</button>
+        <button onclick="setChart('bulan')" id="btn-bulan" class="px-3 py-1.5 rounded-full text-[11px] font-medium bg-surface-container text-on-surface-variant" style="font-family:'JetBrains Mono'">Bulan</button>
+      </div>
+    </div>
+    <!-- Chart -->
+    <div class="flex items-end gap-2 h-36" id="chart-bars">
+      <div class="flex-1 flex flex-col items-center gap-1">
+        <span class="text-[10px] text-outline" style="font-family:'JetBrains Mono'" id="v0">9,2M</span>
+        <div class="bar w-full bg-surface-container-high" style="height:40%" data-h="40" id="b0"></div>
+        <span class="text-[10px] text-outline" style="font-family:'JetBrains Mono'">Sen</span>
+      </div>
+      <div class="flex-1 flex flex-col items-center gap-1">
+        <span class="text-[10px] text-outline" style="font-family:'JetBrains Mono'" id="v1">11,1M</span>
+        <div class="bar w-full bg-surface-container-high" style="height:55%" data-h="55" id="b1"></div>
+        <span class="text-[10px] text-outline" style="font-family:'JetBrains Mono'">Sel</span>
+      </div>
+      <div class="flex-1 flex flex-col items-center gap-1">
+        <span class="text-[10px] text-outline" style="font-family:'JetBrains Mono'" id="v2">15,8M</span>
+        <div class="bar w-full bg-primary-container" style="height:85%" data-h="85" id="b2"></div>
+        <span class="text-[10px] text-outline" style="font-family:'JetBrains Mono'">Rab</span>
+      </div>
+      <div class="flex-1 flex flex-col items-center gap-1">
+        <span class="text-[10px] text-outline" style="font-family:'JetBrains Mono'" id="v3">12,4M</span>
+        <div class="bar w-full bg-surface-container-high" style="height:65%" data-h="65" id="b3"></div>
+        <span class="text-[10px] text-outline" style="font-family:'JetBrains Mono'">Kam</span>
+      </div>
+      <div class="flex-1 flex flex-col items-center gap-1">
+        <span class="text-[10px] text-outline" style="font-family:'JetBrains Mono'" id="v4">13,2M</span>
+        <div class="bar w-full bg-surface-container-high" style="height:70%" data-h="70" id="b4"></div>
+        <span class="text-[10px] text-outline" style="font-family:'JetBrains Mono'">Jum</span>
+      </div>
+      <div class="flex-1 flex flex-col items-center gap-1">
+        <span class="text-[10px] text-outline" style="font-family:'JetBrains Mono'" id="v5">18,5M</span>
+        <div class="bar w-full bg-primary" style="height:95%" data-h="95" id="b5"></div>
+        <span class="text-[10px] text-outline" style="font-family:'JetBrains Mono'">Sab</span>
+      </div>
+      <div class="flex-1 flex flex-col items-center gap-1">
+        <span class="text-[10px] text-outline" style="font-family:'JetBrains Mono'" id="v6">12,4M</span>
+        <div class="bar w-full bg-secondary-container" style="height:80%" data-h="80" id="b6"></div>
+        <span class="text-[10px] text-outline" style="font-family:'JetBrains Mono'">Min</span>
+      </div>
+    </div>
+    <!-- Legend -->
+    <div class="flex gap-3 mt-3 pt-3 border-t border-outline-variant">
+      <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-sm bg-primary"></div><span style="font-family:'JetBrains Mono';font-size:10px;color:#42474f">Tertinggi</span></div>
+      <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-sm bg-secondary-container"></div><span style="font-family:'JetBrains Mono';font-size:10px;color:#42474f">Penutup</span></div>
+    </div>
+  </div>
+
+  <!-- ── QUICK ACTIONS ── -->
+  <div class="slide-in">
+    <p style="font-family:'JetBrains Mono';font-size:11px;color:#727780;letter-spacing:.05em;text-transform:uppercase;margin-bottom:10px">Aksi Cepat</p>
+    <div class="grid grid-cols-4 gap-3">
+      <button onclick="goTo('OWNER_LAPORAN.html')" class="card p-3 flex flex-col items-center gap-2 active:scale-95">
+        <div class="w-11 h-11 rounded-xl gradient-hero flex items-center justify-center">
+          <span class="material-symbols-outlined text-white" style="font-size:22px;font-variation-settings:'FILL' 1">analytics</span>
+        </div>
+        <span style="font-family:'JetBrains Mono';font-size:10px;color:#42474f;text-align:center">Laporan</span>
+      </button>
+      <button onclick="goTo('OWNER_KEUANGAN.html')" class="card p-3 flex flex-col items-center gap-2 active:scale-95">
+        <div class="w-11 h-11 rounded-xl bg-[#b3ebff] flex items-center justify-center">
+          <span class="material-symbols-outlined text-secondary" style="font-size:22px;font-variation-settings:'FILL' 1">payments</span>
+        </div>
+        <span style="font-family:'JetBrains Mono';font-size:10px;color:#42474f;text-align:center">Keuangan</span>
+      </button>
+      <button onclick="goTo('OWNER_MANAJEMEN.html')" class="card p-3 flex flex-col items-center gap-2 active:scale-95">
+        <div class="w-11 h-11 rounded-xl bg-[#ffdea8] flex items-center justify-center">
+          <span class="material-symbols-outlined text-[#5e4200]" style="font-size:22px;font-variation-settings:'FILL' 1">badge</span>
+        </div>
+        <span style="font-family:'JetBrains Mono';font-size:10px;color:#42474f;text-align:center">Staf</span>
+      </button>
+      <button onclick="showToast('Fitur Inventaris dibuka')" class="card p-3 flex flex-col items-center gap-2 active:scale-95">
+        <div class="w-11 h-11 rounded-xl bg-[#ffdad6] flex items-center justify-center">
+          <span class="material-symbols-outlined text-error" style="font-size:22px;font-variation-settings:'FILL' 1">inventory_2</span>
+        </div>
+        <span style="font-family:'JetBrains Mono';font-size:10px;color:#42474f;text-align:center">Inventaris</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── LIVE STATUS STRIP ── -->
+  <div class="card p-4 slide-in">
+    <div class="flex items-center gap-2 mb-3">
+      <div class="w-2 h-2 rounded-full bg-[#15803d] pulse-dot"></div>
+      <span style="font-family:'JetBrains Mono';font-size:11px;color:#42474f;font-weight:500">Live Hari Ini</span>
+      <span style="font-family:'JetBrains Mono';font-size:10px;color:#727780;margin-left:auto">Update 14:22</span>
+    </div>
+    <div class="grid grid-cols-3 gap-3">
+      <div class="bg-surface-container-low p-3 rounded-xl text-center">
+        <p style="font-family:'Hanken Grotesk';font-size:22px;font-weight:800;color:#00355f">320</p>
+        <p style="font-family:'JetBrains Mono';font-size:9px;color:#727780">Total Order</p>
+      </div>
+      <div class="bg-surface-container-low p-3 rounded-xl text-center">
+        <p style="font-family:'Hanken Grotesk';font-size:22px;font-weight:800;color:#00677d">18</p>
+        <p style="font-family:'JetBrains Mono';font-size:9px;color:#727780">Diproses</p>
+      </div>
+      <div class="bg-[#ffdad6] p-3 rounded-xl text-center">
+        <p style="font-family:'Hanken Grotesk';font-size:22px;font-weight:800;color:#ba1a1a">2</p>
+        <p style="font-family:'JetBrains Mono';font-size:9px;color:#93000a">Tertunda</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOP STAFF MINI ── -->
+  <div class="card p-5 slide-in">
+    <div class="flex justify-between items-center mb-4">
+      <h3 style="font-family:'Hanken Grotesk';font-size:16px;font-weight:700;color:#00355f">Staf Terbaik Hari Ini</h3>
+      <button onclick="goTo('OWNER_MANAJEMEN.html')" style="font-family:'JetBrains Mono';font-size:11px;color:#00677d;font-weight:600">Lihat semua →</button>
+    </div>
+    <div class="space-y-3">
+      <div class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-surface-container-low transition-colors cursor-pointer" onclick="goTo('OWNER_MANAJEMEN.html')">
+        <div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-[13px] flex-shrink-0">SM</div>
+        <div class="flex-1">
+          <p style="font-weight:600;font-size:14px">Siti Aminah</p>
+          <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">Shift Pagi · 68 order</p>
+        </div>
+        <div class="text-right">
+          <p style="font-family:'Hanken Grotesk';font-weight:700;color:#00355f">Rp 3,2M</p>
+          <div class="flex items-center gap-0.5 justify-end" style="color:#f1ae00">
+            <span class="material-symbols-outlined" style="font-size:12px;font-variation-settings:'FILL' 1">star</span>
+            <span style="font-family:'JetBrains Mono';font-size:9px">Top Seller</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-surface-container-low transition-colors cursor-pointer" onclick="goTo('OWNER_MANAJEMEN.html')">
+        <div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-[13px] flex-shrink-0">BK</div>
+        <div class="flex-1">
+          <p style="font-weight:600;font-size:14px">Budi Santoso</p>
+          <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">Shift Sore · 42 order</p>
+        </div>
+        <div class="text-right">
+          <p style="font-family:'Hanken Grotesk';font-weight:700;color:#00355f">Rp 2,8M</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ALERT INVENTARIS ── -->
+  <div class="slide-in overflow-hidden rounded-2xl gradient-hero relative cursor-pointer" onclick="showToast('Membuka halaman inventaris...')">
+    <div class="absolute top-0 right-0 w-28 h-28 rounded-full bg-white opacity-5 -mr-8 -mt-8"></div>
+    <div class="relative z-10 p-5 flex items-center gap-4">
+      <div class="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(255,255,255,0.12)">
+        <span class="material-symbols-outlined text-white" style="font-size:28px;font-variation-settings:'FILL' 1">inventory_2</span>
+      </div>
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-1">
+          <span style="background:#ffdad6;color:#93000a;font-family:'JetBrains Mono';font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px">⚠ Perlu Perhatian</span>
+        </div>
+        <h4 style="font-family:'Hanken Grotesk';font-size:15px;font-weight:700;color:white">3 Item Akan Habis</h4>
+        <p style="font-size:12px;color:#a0c9ff;margin-top:2px">Le Minerale, Headphone X, Beras 5kg — dalam 48 jam</p>
+      </div>
+      <button onclick="event.stopPropagation();showToast('Restock dipesan!')" style="background:#50d9fe;color:#005c70;font-family:'Hanken Grotesk';font-size:12px;font-weight:700;padding:8px 14px;border-radius:12px;flex-shrink:0" class="active:scale-95">Restock</button>
+    </div>
+  </div>
+
+  <!-- ── INSIGHT AI ── -->
+  <div class="card p-5 slide-in">
+    <div class="flex items-center gap-2 mb-3">
+      <div class="w-8 h-8 rounded-xl gradient-hero flex items-center justify-center">
+        <span class="material-symbols-outlined text-white" style="font-size:16px;font-variation-settings:'FILL' 1">auto_awesome</span>
+      </div>
+      <h3 style="font-family:'Hanken Grotesk';font-size:15px;font-weight:700;color:#00355f">AI Business Insight</h3>
+      <span style="background:#b3ebff;color:#00677d;font-family:'JetBrains Mono';font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:auto">Real-time</span>
+    </div>
+    <div class="space-y-2">
+      <div class="bg-surface-container-low p-3 rounded-xl flex gap-3">
+        <span class="material-symbols-outlined text-[#15803d] flex-shrink-0" style="font-size:18px;font-variation-settings:'FILL' 1">trending_up</span>
+        <p style="font-size:13px;color:#191c1d">Sabtu kemarin adalah hari terbaik minggu ini dengan <b>Rp 18,5 Juta</b>. Pertahankan promo weekend!</p>
+      </div>
+      <div class="bg-surface-container-low p-3 rounded-xl flex gap-3">
+        <span class="material-symbols-outlined text-[#f1ae00] flex-shrink-0" style="font-size:18px;font-variation-settings:'FILL' 1">lightbulb</span>
+        <p style="font-size:13px;color:#191c1d">Margin kotor <b>33%</b> — lebih tinggi dari rata-rata toko sejenis (28%). Efisiensi operasional Anda baik.</p>
+      </div>
+      <div class="bg-[#ffdad6] p-3 rounded-xl flex gap-3">
+        <span class="material-symbols-outlined text-error flex-shrink-0" style="font-size:18px;font-variation-settings:'FILL' 1">warning</span>
+        <p style="font-size:13px;color:#191c1d">2 transaksi tertunda lebih dari 30 menit. Segera cek <b>Laporan &gt; Transaksi Aktif</b>.</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ── BOTTOM NAV ── -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface border-t border-outline-variant shadow-lg flex justify-around items-center h-16 px-2">
+  <a href="HOME.html" class="nav-link active">
+    <span class="material-symbols-outlined" style="font-size:22px;font-variation-settings:'FILL' 1">dashboard</span>Home
+  </a>
+  <a href="Laporan.html" class="nav-link">
+    <span class="material-symbols-outlined" style="font-size:22px">analytics</span>Laporan
+  </a>
+  <a href="Manajemen.html" class="nav-link">
+    <span class="material-symbols-outlined" style="font-size:22px">badge</span>Staf
+  </a>
+  <a href="Keuangan.html" class="nav-link">
+    <span class="material-symbols-outlined" style="font-size:22px">payments</span>Keuangan
+  </a>
+</nav>
+
+<script>
+function goTo(page){ window.location.href = page; }
+function showToast(msg){
+  const t=document.createElement('div');
+  t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#00355f;color:white;padding:12px 20px;border-radius:14px;font-family:JetBrains Mono,monospace;font-size:12px;font-weight:600;z-index:999;white-space:nowrap;box-shadow:0 4px 16px rgba(0,53,95,.3)';
+  t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),2800);
+}
+const chartWeek={vals:['9,2M','11,1M','15,8M','12,4M','13,2M','18,5M','12,4M'],heights:[40,55,85,65,70,95,80]};
+const chartMonth={vals:['42M','38M','51M','55M','48M','62M','44M'],heights:[50,45,65,70,58,85,52]};
+let currentChart='minggu';
+function setChart(mode){
+  currentChart=mode;
+  const data=mode==='minggu'?chartWeek:chartMonth;
+  document.getElementById('btn-minggu').className='px-3 py-1.5 rounded-full text-[11px] font-medium '+(mode==='minggu'?'bg-primary text-white':'bg-surface-container text-on-surface-variant');
+  document.getElementById('btn-bulan').className='px-3 py-1.5 rounded-full text-[11px] font-medium '+(mode==='bulan'?'bg-primary text-white':'bg-surface-container text-on-surface-variant');
+  data.heights.forEach((h,i)=>{
+    const b=document.getElementById('b'+i);
+    b.style.height='0%';
+    setTimeout(()=>{b.style.height=h+'%'},50);
+    document.getElementById('v'+i).textContent=data.vals[i];
+  });
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  const bars=document.querySelectorAll('.bar');
+  bars.forEach(b=>{const h=b.style.height;b.style.height='0%';setTimeout(()=>b.style.height=h,100)});
+});
+</script>
+</body>
+</html>

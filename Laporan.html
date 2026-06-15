@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KemasToko Owner — Laporan</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Hanken+Grotesk:wght@600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script>tailwind.config={theme:{extend:{colors:{primary:"#00355f","primary-container":"#0f4c81","on-primary":"#ffffff","on-primary-container":"#8ebdf9","primary-fixed":"#d2e4ff","surface":"#f8f9fa","surface-container-lowest":"#ffffff","surface-container-low":"#f3f4f5","surface-container":"#edeeef","surface-container-high":"#e7e8e9","surface-container-highest":"#e1e3e4","on-surface":"#191c1d","on-surface-variant":"#42474f","outline":"#727780","outline-variant":"#c2c7d1","secondary":"#00677d","secondary-container":"#50d9fe","on-secondary-container":"#005c70","tertiary":"#463000","tertiary-fixed":"#ffdea8","on-tertiary-fixed-variant":"#5e4200","on-tertiary-container":"#f1ae00","error":"#ba1a1a","error-container":"#ffdad6","on-error-container":"#93000a"}}}}</script>
+<style>
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+body{background:#f3f4f5;font-family:'Inter',sans-serif;-webkit-tap-highlight-color:transparent}
+.card{background:#fff;border:1px solid #e1e3e4;border-radius:16px;box-shadow:0 2px 12px -4px rgba(0,53,95,.08)}
+.nav-link{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 16px;border-radius:20px;transition:all .2s;color:#727780;font-size:10px;font-family:'JetBrains Mono',monospace;font-weight:500;cursor:pointer;text-decoration:none}
+.nav-link.active{background:#50d9fe;color:#005c70}
+.bar{transition:height .8s cubic-bezier(.4,0,.2,1);border-radius:6px 6px 0 0}
+.tab-active{background:#00355f;color:white}
+.tab-btn{font-family:'JetBrains Mono';font-size:11px;padding:6px 14px;border-radius:20px;transition:all .15s;color:#42474f}
+.gradient-hero{background:linear-gradient(135deg,#00355f 0%,#0f4c81 60%,#2d6197 100%)}
+.donut-bg{fill:none;stroke:#e1e3e4;stroke-width:8}
+.donut-fill{fill:none;stroke-width:8;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%}
+</style>
+</head>
+<body class="min-h-screen pb-24 text-on-surface">
+
+<header class="fixed top-0 w-full z-50 bg-surface/95 backdrop-blur-md shadow-sm flex justify-between items-center px-4 h-16 border-b border-outline-variant/40">
+  <div class="flex items-center gap-3">
+    <a href="OWNER_HOME.html" class="material-symbols-outlined text-primary p-1 active:scale-90">arrow_back</a>
+    <div>
+      <h1 style="font-family:'Hanken Grotesk';font-size:18px;font-weight:800;color:#00355f">Laporan Eksekutif</h1>
+      <p style="font-family:'JetBrains Mono';font-size:9px;color:#727780;letter-spacing:.04em">OWNER DASHBOARD · KemasToko</p>
+    </div>
+  </div>
+  <div class="flex gap-1">
+    <button onclick="showToast('Export PDF sedang dibuat...')" class="flex items-center gap-1 px-3 py-1.5 rounded-xl active:scale-95" style="background:#ffdea8;color:#5e4200;font-family:'JetBrains Mono';font-size:11px;font-weight:600">
+      <span class="material-symbols-outlined" style="font-size:16px">download</span> Export
+    </button>
+  </div>
+</header>
+
+<main class="pt-20 px-4 max-w-2xl mx-auto space-y-5">
+
+  <!-- Period Tabs -->
+  <div class="flex gap-2 overflow-x-auto pb-1" style="scrollbar-width:none">
+    <button onclick="setPeriod(this,'hari')" class="tab-btn tab-active whitespace-nowrap">Hari Ini</button>
+    <button onclick="setPeriod(this,'minggu')" class="tab-btn bg-white border border-outline-variant whitespace-nowrap">Minggu Ini</button>
+    <button onclick="setPeriod(this,'bulan')" class="tab-btn bg-white border border-outline-variant whitespace-nowrap">Bulan Ini</button>
+    <button onclick="setPeriod(this,'tahun')" class="tab-btn bg-white border border-outline-variant whitespace-nowrap">Tahun 2026</button>
+  </div>
+
+  <!-- 4 KPI Cards -->
+  <div class="grid grid-cols-2 gap-3">
+    <div class="card p-4">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="material-symbols-outlined text-primary" style="font-size:18px;font-variation-settings:'FILL' 1">payments</span>
+        <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">Pendapatan</p>
+      </div>
+      <p id="kpi-revenue" style="font-family:'Hanken Grotesk';font-size:22px;font-weight:800;color:#00355f">Rp 45,3 Jt</p>
+      <p style="font-family:'JetBrains Mono';font-size:10px;color:#15803d;margin-top:2px">↑ +14% vs kemarin</p>
+    </div>
+    <div class="card p-4">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="material-symbols-outlined text-secondary" style="font-size:18px;font-variation-settings:'FILL' 1">percent</span>
+        <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">Margin Kotor</p>
+      </div>
+      <p style="font-family:'Hanken Grotesk';font-size:22px;font-weight:800;color:#00355f">68,4%</p>
+      <p style="font-family:'JetBrains Mono';font-size:10px;color:#15803d;margin-top:2px">↑ Target: 65%</p>
+    </div>
+    <div class="card p-4">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="material-symbols-outlined" style="font-size:18px;color:#5e4200;font-variation-settings:'FILL' 1">storefront</span>
+        <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">Total Order</p>
+      </div>
+      <p style="font-family:'Hanken Grotesk';font-size:22px;font-weight:800;color:#00355f">320</p>
+      <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780;margin-top:2px">Avg: Rp 141rb/order</p>
+    </div>
+    <div class="card p-4">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="material-symbols-outlined text-error" style="font-size:18px;font-variation-settings:'FILL' 1">local_shipping</span>
+        <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">HPP</p>
+      </div>
+      <p style="font-family:'Hanken Grotesk';font-size:22px;font-weight:800;color:#00355f">Rp 312rb</p>
+      <p style="font-family:'JetBrains Mono';font-size:10px;color:#ba1a1a;margin-top:2px">↓ -3% vs kemarin</p>
+    </div>
+  </div>
+
+  <!-- Revenue Chart -->
+  <div class="card p-5">
+    <div class="flex justify-between items-center mb-4">
+      <h3 style="font-family:'Hanken Grotesk';font-size:16px;font-weight:700;color:#00355f">Tren Pendapatan Harian</h3>
+      <span style="font-family:'JetBrains Mono';font-size:10px;color:#727780">Jun 2026</span>
+    </div>
+    <div class="flex items-end gap-1.5 h-32">
+      <div class="flex-1 flex flex-col items-center gap-1">
+        <div class="bar w-full bg-surface-container-high" style="height:50%"></div>
+        <span style="font-family:'JetBrains Mono';font-size:8px;color:#727780">4</span>
+      </div>
+      <div class="flex-1 flex flex-col items-center gap-1">
+        <div class="bar w-full bg-surface-container-high" style="height:65%"></div>
+        <span style="font-family:'JetBrains Mono';font-size:8px;color:#727780">5</span>
+      </div>
+      <div class="flex-1 flex flex-col items-center gap-1">
+        <div class="bar w-full bg-surface-container-high" style="height:55%"></div>
+        <span style="font-family:'JetBrains Mono';font-size:8px;color:#727780">6</span>
+      </div>
+      <div class="flex-1 flex flex-col items-center gap-1">
+        <div class="bar w-full bg-surface-container-high" style="height:75%"></div>
+        <span style="font-family:'JetBrains Mono';font-size:8px;color:#727780">7</span>
+      </div>
+      <div class="flex-1 flex flex-col items-center gap-1">
+        <div class="bar w-full bg-surface-container-high" style="height:60%"></div>
+        <span style="font-family:'JetBrains Mono';font-size:8px;color:#727780">8</span>
+      </div>
+      <div class="flex-1 flex flex-col items-center gap-1">
+        <div class="bar w-full bg-surface-container-high" style="height:90%"></div>
+        <span style="font-family:'JetBrains Mono';font-size:8px;color:#727780">9</span>
+      </div>
+      <div class="flex-1 flex flex-col items-center gap-1">
+        <div class="bar w-full bg-primary" style="height:100%"></div>
+        <span style="font-family:'JetBrains Mono';font-size:8px;color:#00355f;font-weight:700">10</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Revenue by Category (Donut) -->
+  <div class="card p-5">
+    <h3 style="font-family:'Hanken Grotesk';font-size:16px;font-weight:700;color:#00355f;margin-bottom:16px">Kategori Pendapatan</h3>
+    <div class="flex items-center gap-5">
+      <!-- Donut SVG -->
+      <div class="relative flex-shrink-0" style="width:100px;height:100px">
+        <svg viewBox="0 0 36 36" style="width:100px;height:100px;transform:rotate(-90deg)">
+          <circle cx="18" cy="18" r="14" fill="none" stroke="#e1e3e4" stroke-width="4"/>
+          <circle cx="18" cy="18" r="14" fill="none" stroke="#0f4c81" stroke-width="4" stroke-dasharray="53 88" stroke-dashoffset="0" stroke-linecap="round"/>
+          <circle cx="18" cy="18" r="14" fill="none" stroke="#50d9fe" stroke-width="4" stroke-dasharray="26 88" stroke-dashoffset="-53" stroke-linecap="round"/>
+          <circle cx="18" cy="18" r="14" fill="none" stroke="#ffdea8" stroke-width="4" stroke-dasharray="17 88" stroke-dashoffset="-79" stroke-linecap="round"/>
+        </svg>
+        <div class="absolute inset-0 flex items-center justify-center flex-col">
+          <span style="font-family:'Hanken Grotesk';font-size:14px;font-weight:800;color:#00355f">68%</span>
+          <span style="font-family:'JetBrains Mono';font-size:8px;color:#727780">Margin</span>
+        </div>
+      </div>
+      <!-- Legend -->
+      <div class="space-y-2 flex-1">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-sm" style="background:#0f4c81"></div><span style="font-size:13px">Makanan & Minuman</span></div>
+          <span style="font-family:'JetBrains Mono';font-size:11px;font-weight:600;color:#00355f">60%</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-sm" style="background:#50d9fe"></div><span style="font-size:13px">Sembako</span></div>
+          <span style="font-family:'JetBrains Mono';font-size:11px;font-weight:600;color:#00355f">30%</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-sm" style="background:#ffdea8"></div><span style="font-size:13px">Lainnya</span></div>
+          <span style="font-family:'JetBrains Mono';font-size:11px;font-weight:600;color:#00355f">10%</span>
+        </div>
+        <div class="h-px bg-outline-variant my-1"></div>
+        <div class="flex justify-between items-center">
+          <span style="font-size:12px;color:#42474f;font-weight:600">Total Revenue</span>
+          <span style="font-family:'Hanken Grotesk';font-size:14px;font-weight:800;color:#00355f">Rp 45,3 Jt</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Penjualan Terkini -->
+  <div class="card p-5">
+    <div class="flex justify-between items-center mb-4">
+      <h3 style="font-family:'Hanken Grotesk';font-size:16px;font-weight:700;color:#00355f">Penjualan Terkini</h3>
+      <span style="font-family:'JetBrains Mono';font-size:10px;background:#b3ebff;color:#00677d;padding:3px 8px;border-radius:20px;font-weight:600">320 total</span>
+    </div>
+    <div class="space-y-2">
+      <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container-low transition-colors">
+        <div class="w-9 h-9 rounded-xl bg-primary-fixed flex items-center justify-center flex-shrink-0">
+          <span class="material-symbols-outlined text-primary" style="font-size:16px;font-variation-settings:'FILL' 1">shopping_bag</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p style="font-size:13px;font-weight:600">#TRX-0047 · Bu Ani</p>
+          <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">14:22 · Tunai · 4 item</p>
+        </div>
+        <span style="font-family:'Hanken Grotesk';font-weight:700;color:#15803d">+Rp 67.500</span>
+      </div>
+      <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container-low transition-colors">
+        <div class="w-9 h-9 rounded-xl bg-[#b3ebff] flex items-center justify-center flex-shrink-0">
+          <span class="material-symbols-outlined text-secondary" style="font-size:16px;font-variation-settings:'FILL' 1">qr_code_2</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p style="font-size:13px;font-weight:600">#TRX-0046 · Pak Hendra</p>
+          <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">13:55 · QRIS · 2 item</p>
+        </div>
+        <span style="font-family:'Hanken Grotesk';font-weight:700;color:#15803d">+Rp 28.500</span>
+      </div>
+      <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container-low transition-colors">
+        <div class="w-9 h-9 rounded-xl bg-error-container flex items-center justify-center flex-shrink-0">
+          <span class="material-symbols-outlined text-error" style="font-size:16px;font-variation-settings:'FILL' 1">cancel</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p style="font-size:13px;font-weight:600">#TRX-0045 · Void</p>
+          <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">13:40 · QRIS · Dikembalikan</p>
+        </div>
+        <span style="font-family:'Hanken Grotesk';font-weight:700;color:#ba1a1a">-Rp 15.000</span>
+      </div>
+      <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container-low transition-colors">
+        <div class="w-9 h-9 rounded-xl bg-primary-fixed flex items-center justify-center flex-shrink-0">
+          <span class="material-symbols-outlined text-primary" style="font-size:16px;font-variation-settings:'FILL' 1">shopping_bag</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p style="font-size:13px;font-weight:600">#TRX-0044 · Siti Rahma</p>
+          <p style="font-family:'JetBrains Mono';font-size:10px;color:#727780">13:12 · Transfer · 6 item</p>
+        </div>
+        <span style="font-family:'Hanken Grotesk';font-weight:700;color:#15803d">+Rp 142.000</span>
+      </div>
+    </div>
+    <button onclick="showToast('Memuat semua transaksi...')" class="w-full mt-3 py-3 rounded-xl text-primary font-semibold border border-outline-variant active:scale-95" style="font-family:'Hanken Grotesk';font-size:14px">
+      Lihat Semua Transaksi →
+    </button>
+  </div>
+
+  <!-- Business Insight AI -->
+  <div class="overflow-hidden rounded-2xl gradient-hero p-5">
+    <div class="flex items-center gap-2 mb-3">
+      <span class="material-symbols-outlined text-white" style="font-size:20px;font-variation-settings:'FILL' 1">auto_awesome</span>
+      <h4 style="font-family:'Hanken Grotesk';font-size:15px;font-weight:700;color:white">Business Insight</h4>
+    </div>
+    <p style="font-size:13px;color:#a0c9ff;line-height:1.6">Performa hari ini <span style="color:white;font-weight:600">melampaui target 14%</span>. Penjualan tertinggi pada <span style="color:#50d9fe;font-weight:600">pukul 11–13 WIB</span>. Rekomendasikan tambah staf shift siang untuk tingkatkan kapasitas.</p>
+    <div class="flex gap-2 mt-4">
+      <button onclick="goTo('OWNER_LAPORAN.html')" style="background:#50d9fe;color:#005c70;font-family:'Hanken Grotesk';font-size:12px;font-weight:700;padding:8px 16px;border-radius:12px" class="active:scale-95">Analisis Lebih Lanjut</button>
+      <button onclick="goTo('OWNER_MANAJEMEN.html')" style="background:rgba(255,255,255,0.12);color:white;font-family:'Hanken Grotesk';font-size:12px;font-weight:600;padding:8px 16px;border-radius:12px" class="active:scale-95">Kelola Staf</button>
+    </div>
+  </div>
+
+</main>
+
+<nav class="fixed bottom-0 w-full z-50 bg-surface border-t border-outline-variant shadow-lg flex justify-around items-center h-16 px-2">
+  <a href="HOME.html" class="nav-link"><span class="material-symbols-outlined" style="font-size:22px">dashboard</span>Home</a>
+  <a href="Laporan.html" class="nav-link active"><span class="material-symbols-outlined" style="font-size:22px;font-variation-settings:'FILL' 1">analytics</span>Laporan</a>
+  <a href="Laporan.html" class="nav-link"><span class="material-symbols-outlined" style="font-size:22px">badge</span>Staf</a>
+  <a href="Keuangan.html" class="nav-link"><span class="material-symbols-outlined" style="font-size:22px">payments</span>Keuangan</a>
+</nav>
+
+<script>
+function goTo(p){window.location.href=p}
+function showToast(msg){const t=document.createElement('div');t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#00355f;color:white;padding:12px 20px;border-radius:14px;font-family:JetBrains Mono,monospace;font-size:12px;font-weight:600;z-index:999;white-space:nowrap';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2800)}
+function setPeriod(el,p){document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('tab-active');b.classList.add('bg-white','border','border-outline-variant')});el.classList.add('tab-active');el.classList.remove('bg-white','border','border-outline-variant');const kpi={'hari':'Rp 45,3 Jt','minggu':'Rp 312 Jt','bulan':'Rp 1,4 M','tahun':'Rp 16,8 M'};document.getElementById('kpi-revenue').textContent=kpi[p];}
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.bar').forEach(b=>{const h=b.style.height;b.style.height='0%';setTimeout(()=>b.style.height=h,100)})});
+</script>
+</body>
+</html>
